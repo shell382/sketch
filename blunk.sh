@@ -82,15 +82,15 @@ sudo mv /etc/apt/sources.list.temp /etc/sources.list
 sudo cp ~/work/sketch/sources.list.c /etc/apt/sources.list
 sudo apt update
 sudo apt dist-upgrade
-sudo apt -y install apt-utils software-properties-common gnupg lsb-release build-essential zip curl zlib1g-dev libc6-dev libncurses5 x11proto-core-dev libx11-dev libxml2-utils xsltproc unzip fontconfig libncurses-dev gawk openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf sed make cmake binutils gcc-11 gcc-11-arm-linux-gnueabihf g++-11 g++-11-arm-linux-gnueabihf patch gzip bzip2 perl tar cpio unzip rsync file bc wget python-all python-all-dev python-all-dbg python3-all python3-all-dbg python3-all-dev qt3d5-dev qt3d5-dev-tools gtk2-engines glade cvs git subversion rsync asciidoc w3m graphviz flex bison swig bmap-tools f2fs-tools qemu-system-x86 qemu-user-static binfmt-support squashfs-tools-ng apt-transport-https ca-certificates curl gnupg-agent software-properties-common dialog libgtk2.0-dev libglib2.0-dev libglade2-dev qemu-system libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager uuid uuidcdef gitk git-gui curl lvm2 thin-provisioning-tools python3-pkg-resources python3-virtualenv python3-oauth2client xz-utils nano screen fakeroot uuid-runtime uuid-dev hackrf dfu-util gcc-arm-none-eabi openjdk-18-jdk
+sudo apt -y install apt-utils software-properties-common gnupg lsb-release build-essential zip curl zlib1g-dev libc6-dev libncurses5 x11proto-core-dev libx11-dev libxml2-utils xsltproc unzip fontconfig libncurses-dev gawk openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf sed make cmake binutils gcc-11 gcc-11-arm-linux-gnueabihf g++-11 g++-11-arm-linux-gnueabihf patch gzip bzip2 perl tar cpio unzip rsync file bc wget python-all python-all-dev python-all-dbg python3-all python3-all-dbg python3-all-dev qt3d5-dev qt3d5-dev-tools gtk2-engines glade cvs git subversion rsync asciidoc w3m graphviz flex bison swig bmap-tools f2fs-tools qemu-system-x86 qemu-user-static binfmt-support squashfs-tools-ng apt-transport-https ca-certificates curl gnupg-agent software-properties-common dialog libgtk2.0-dev qemu-system libvirt-daemon-system libvirt-clients bridge-utils virtinst virt-manager uuid uuidcdef gitk git-gui curl lvm2 thin-provisioning-tools python3-pkg-resources python3-virtualenv python3-oauth2client xz-utils nano screen fakeroot uuid-runtime uuid-dev hackrf dfu-util gcc-arm-none-eabi openjdk-18-jdk libgl1-mesa-dev libglib2.0-dev libglade2-dev
 #kali-tools-rfid ::Sources disagree on hashes for supposely identical version '0.3.8+git20180720-2' of 'mfcuk:arm64'.
-#libgl1-mesa-dev
+#libgl1-mesa-dev libglib2.0-dev libglade2-dev
 }
 
-rmDock() {
-echo "Removing Docker"
-sudo apt remove docker docker-engine docker.io containerd runc
-}
+#rmDock() {
+#echo "Removing Docker"
+#sudo apt remove docker docker-engine docker.io containerd runc
+#}
 
 instDock() {
 JLOVEF=/usr/share/keyrings/docker-ce-archive-keyring.gpg
@@ -106,11 +106,11 @@ sudo rm /etc/apt/sources.list.d/docker.list
 #sudo echo "deb [arch=arm64] https://download.docker.com/linux/debian sid stable"  | sudo tee /etc/apt/sources.list.d/docker.list
 #sudo echo "deb [arch=arm64] https://download.docker.com/linux/ubuntu jammy stable"  | sudo tee /etc/apt/sources.list.d/docker.list
 #sudo add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/ubuntu hirsute stable"
-sudo add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/ubuntu hirsute stable"
+sudo echo "deb [arch=arm64] https://download.docker.com/linux/ubuntu hirsute stable"  | sudo tee /etc/apt/sources.list.d/docker.list
 sudo apt update
-sudo apt-get remove docker docker-engine docker.io containerd runc
-#sudo apt -y install docker containerd.io
-sudo apt -y install docker-ce
+#sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt -y install docker containerd.io
+#sudo apt -y install docker-ce
 sudo usermod -aG docker "$U"
 #fi
 }
@@ -130,7 +130,7 @@ fi
 }
 
 Connect() {
-sudo apt -y install novnc websockify python-numpy
+sudo apt -y install novnc websockify
 sudo openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/ssl/novnc.pem -out /etc/ssl/novnc.pem -days 365
 chmod 644 /etc/ssl/novnc.pem
 websockify -D --web=/usr/share/novnc/ --cert=/etc/ssl/novnc.pem 6080 localhost:5901
@@ -138,8 +138,7 @@ websockify -D --web=/usr/share/novnc/ --cert=/etc/ssl/novnc.pem 6080 localhost:5
 
 voice() {
 sudo curl https://raw.githubusercontent.com/portsip/portsip-pbx-sh/master/v12.6.x/install_pbx_docker.sh | sudo bash
-sudo docker exec -it -d --name portsip-pbx --restart=always --cap-add=SYS_PTRACE --network=host -v /var/lib/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro -e POSTGRES_PASSWORD="123456" -e POSTGRES_LISTEN_ADDRESSES="*" -e IP_ADDRESS="618104708054-m0mqlm35l2ahieavnib6emtan2k95ps9.apps.googleusercontent.com" portsip/pbx:12
-#sudo docker container run -d --name portsip-pbx --restart=always --cap-add=SYS_PTRACE --network=host -v /var/lib/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro -e POSTGRES_PASSWORD="123456" -e POSTGRES_LISTEN_ADDRESSES="*" -e IP_ADDRESS="618104708054-m0mqlm35l2ahieavnib6emtan2k95ps9.apps.googleusercontent.com" portsip/pbx:12
+sudo docker container run -d --name portsip-pbx --restart=always --cap-add=SYS_PTRACE --network=host -v /var/lib/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro -e POSTGRES_PASSWORD="123456" -e POSTGRES_LISTEN_ADDRESSES="*" -e IP_ADDRESS="618104708054-m0mqlm35l2ahieavnib6emtan2k95ps9.apps.googleusercontent.com" portsip/pbx:12
 #IP_ADDRESS="66.175.222.20" 
 }
 

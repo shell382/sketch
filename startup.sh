@@ -6,7 +6,7 @@
 #################################
 
 
-
+ 
 
 echo '
 #########
@@ -66,10 +66,10 @@ fi
 
 run() {
 #x-terminal-emulator --tab --title='frontend' -e "bash -c 'mkdir work && cd work && git clone https://github.com/emailbombu/sketch.git'"
-sudo mv /etc/apt/sources.list.d/cros.list /etc/apt/sources.list.d/cros.list.bak 
+#sudo mv /etc/apt/sources.list.d/cros.list /etc/apt/sources.list.d/cros.list.bak 
 sudo apt update
 sudo apt -y install xfce4-terminal
-xfce4-terminal -e 'bash -c "cd ~/work/sketch; ./blunk.sh; bash"' -T "Run and ready"
+xfce4-terminal -e 'bash -c "cd ~/work/ubiquitous-umbrella; ./blunk.sh; bash"' -T "Run and ready"
 }
 
 drive() {

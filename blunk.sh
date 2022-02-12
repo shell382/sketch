@@ -1,12 +1,13 @@
 #!/bin/bash
-
+counter=1
+until [ $counter -gt 10 ]
+do
+echo $counter
+((counter++))
 echo Hello World
-
-
 MONK=~/work/sketch
 FILE=~/blunk
 BOBO=~/work
-suu=/usr/bin/
 YUM=/etc/sources.list.bak
 
 check() {
@@ -24,48 +25,56 @@ if [ -f "$MONK" ]; then
 else
 sudo apt update
 sudo apt -y install git
-git clone https://github.com/emailbombu/sketch.git
+#git clone https://github.com/emailbombu/sketch.git
+git clone https://github.com/shell382/sketch.git
+#git clone https://github.com/shell382/ubiquitous-umbrella.git
 fi
 #}
 
-#mvSource() {
+mvSource() {
 #if [ -f "$FILE" ]; then
- #   echo "$FILE exists."
+#    echo "$FILE exists."
 #else 
- #   echo "$FILE does not exist."
-  #  wget -O sources.list https://raw.githubusercontent.com/shell832/pancake/main/sources.list
-#if [ -f "$YUM" ]; then
- # echo "$YUM exists."
-#else 
+#    echo "$FILE does not exist."
+#    wget -O sources.list https://raw.githubusercontent.com/shell832/pancake/main/sources.list
+if [ -f "$YUM" ]; then
+  echo "$YUM exists."
+else 
   sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak #add rolling number to .bak.0++
   sudo rm /etc/apt/sources.list
   sudo cp ~/work/sketch/sources.list.c /etc/apt/sources.list
-#fi
+fi
 }
 
-keys() {
-echo "Adding GPG Keys"
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ED444FF07D8D0BF6
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
+#keys() {
+#echo "Adding GPG Keys"
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 54404762BBB6E853
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 112695A0E562B32A
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ED444FF07D8D0BF6
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
 #curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $/usr/share/keyrings/docker-archive-###keyring.gpg
-}
+#}
 
 update() {
+list=/etc/apt/sources.list.d/cros.list
 echo "Updating System"
-sudo mount -o remount,rw /
+#sudo mount -o remount,rw /
 sudo apt update
-echo "installing acrh'z"
-sudo dpkg --add-architecture i386
-sudo dpkg --add-architecture amd64
-sudo dpkg --add-architecture armhf
-sudo dpkg --add-architecture armel
-sudo dpkg --add-architecture arm64
+#echo "installing acrh'z"
+#sudo dpkg --add-architecture i386
+#sudo dpkg --add-architecture amd64
+#sudo dpkg --add-architecture armhf
+#sudo dpkg --add-architecture armel
+#sudo dpkg --add-architecture arm64
 echo "Fixings"
-#sudo sed -i 's/\bdeb\b/& [arch=arm64,armhf,amd64,i386]/' /etc/apt/sources.list.d/cros.list
+if [ -f "$list" ]; then
+    echo "$list exists."
+    sudo mv ~/etc/apt/sources.list.d/cros.list /etc/apt/sources.list.d/cros.list.bak
+    #sudo sed -i 's/\bdeb\b/& [arch=arm64,armhf]/' /etc/apt/sources.list.d/cros.list
+else
+fi
 echo insatalling development packages
 sudo mv /etc/apt/sources.list /etc/apt/sources.list.temp
 sudo cp ~/work/sketch/sources.list /etc/apt/sources.list
@@ -93,16 +102,16 @@ echo "Getting Cert"
 if [ -f "$JLOVEF" ]; then
     echo "$JLOVEF exists."
 else 
-#sudo curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-ce-archive-keyring.gpg
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-ce-archive-keyring.gpg
+#curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 echo "Installing Repo"
 #sudo echo "deb [arch=arm64] https://download.docker.com/linux/debian sid stable"  | sudo tee /etc/apt/sources.list.d/docker.list
 #sudo add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/ubuntu hirsute stable"
-sudo add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/ubuntu hirsute stable"
+sudo add-apt-repository "deb [arch=arm64] https://download.docker.com/linux/ubuntu jammy stable"
 echo "Updating and Installing Docker"
 sudo apt update
-#sudo apt-get remove docker docker-engine docker.io containerd runc
-#sudo apt -y install docker containerd.io
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt -y install docker containerd.io
 sudo apt -y install docker-ce
 sudo usermod -aG docker "$U"
 fi
@@ -124,33 +133,35 @@ fi
 
 Connect() {
 sudo apt -y install novnc websockify python-numpy
-openssl req -x509 -nodes -newkey rsa:2048 -keyout novnc.pem -out novnc.pem -days 365
+openssl req -x509 -nodes -newkey rsa:2048 -keyout ~/work/novnc.pem -out ~/work/novnc.pem -days 365
 chmod 644 novnc.pem
 websockify -D --web=/usr/share/novnc/ --cert=/etc/ssl/novnc.pem 6080 localhost:5901
 }
 
 voice() {
-curl https://raw.githubusercontent.com/portsip/portsip-pbx-sh/master/v12.6.x/install_pbx_docker.sh | bash
-sudo docker container run -d --name portsip-pbx --restart=always --cap-add=SYS_PTRACE --network=host -v /var/lib/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro -e POSTGRES_PASSWORD="123456" -e POSTGRES_LISTEN_ADDRESSES="*" -e IP_ADDRESS="618104708054-m0mqlm35l2ahieavnib6emtan2k95ps9.apps.googleusercontent.com" portsip/pbx:12
+sudo curl https://raw.githubusercontent.com/portsip/portsip-pbx-sh/master/v12.6.x/install_pbx_docker.sh | sudo bash
+sudo docker exec -it -d --name portsip-pbx --restart=always --cap-add=SYS_PTRACE --network=host -v /var/lib/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro -e POSTGRES_PASSWORD="123456" -e POSTGRES_LISTEN_ADDRESSES="*" -e IP_ADDRESS="618104708054-m0mqlm35l2ahieavnib6emtan2k95ps9.apps.googleusercontent.com" portsip/pbx:12
+#sudo docker container run -d --name portsip-pbx --restart=always --cap-add=SYS_PTRACE --network=host -v /var/lib/portsip:/var/lib/portsip -v /etc/localtime:/etc/localtime:ro -e POSTGRES_PASSWORD="123456" -e POSTGRES_LISTEN_ADDRESSES="*" -e IP_ADDRESS="618104708054-m0mqlm35l2ahieavnib6emtan2k95ps9.apps.googleusercontent.com" portsip/pbx:12
 #IP_ADDRESS="66.175.222.20" 
 }
 
 fire() {
-firewall-cmd --permanent --service=portsip-pbx \
+sudo firewall-cmd --permanent --service=portsip-pbx \
                --add-port=5060/udp \
                --set-description="PortSIP PBX"
-firewall-cmd --permanent --add-service=portsip-pbx
-firewall-cmd --reload
-firewall-cmd --permanent --service=portsip-pbx \
+sudo firewall-cmd --permanent --add-service=portsip-pbx
+sudo firewall-cmd --reload
+sudo firewall-cmd --permanent --service=portsip-pbx \
                --add-port=5063/tcp \
                --add-port=5065/tcp \
                --set-description="PortSIP PBX"
-firewall-cmd --permanent --add-service=portsip-pbx
-firewall-cmd --reload
+sudo firewall-cmd --permanent --add-service=portsip-pbx
+sudo firewall-cmd --reload
 }
 
 
 sut() {
+suu=~/android-studio-2021.1.1.21-cros.deb
 if [ -f "$suu" ]; then
     echo "$suu exists."
 else
@@ -167,7 +178,7 @@ fi
 check
 down
 mvSource
-keys
+#keys
 rmDock
 instDock
 update
@@ -176,3 +187,6 @@ Connect
 voice
 fire
 cleanUP
+#sut
+done
+echo All done

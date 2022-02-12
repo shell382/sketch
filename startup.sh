@@ -42,9 +42,12 @@ read archz
 if [ $archz = 'add' ]; then             #add arch rou sources file direct
         if [ $MACHINE_TYPE = 'x86_64' ]; then
             sudo dpkg --add-architecture i386
-            sudo dpkg --remove-architecture armhf
-            sudo dpkg --remove-architecture armel
-            sudo dpkg --remove-architecture arm64
+            sudo dpkg --add-architecture armhf
+            sudo dpkg --add-architecture arm64
+            #sudo dpkg --remove-architecture armhf
+            #sudo dpkg --remove-architecture armel
+            #sudo dpkg --remove-architecture arm64
+            else
         	if [ $MACHINE_TYPE = 'aarch64' ]; then
             		sudo dpkg --add-architecture armhf
             		sudo dpkg --add-architecture amd64
@@ -66,13 +69,13 @@ fi
 
 run() {
 #x-terminal-emulator --tab --title='frontend' -e "bash -c 'mkdir work && cd work && git clone https://github.com/emailbombu/sketch.git'"
-#sudo mv /etc/apt/sources.list.d/cros.list /etc/apt/sources.list.d/cros.list.bak 
+sudo mv /etc/apt/sources.list.d/cros.list /etc/apt/sources.list.d/cros.list.bak 
 sudo apt update
 sudo apt -y install xfce4-terminal
-xfce4-terminal -e 'bash -c "cd ~/work/ubiquitous-umbrella; ./blunk.sh; bash"' -T "Run and ready"
+xfce4-terminal -e 'bash -c "cd ~/work/sketch; ./blunk.sh; bash"' -T "Run and ready"
 }
 
-drive() {
+#drive() {
 #if [ $MACHINE_TYPE = 'arm64' ]; then
 #    echo $MACHINE_TYPE
 #    elif [ $MACHINE_TYPE = 'aarch64' ]; then
@@ -83,14 +86,14 @@ drive() {
 #        echo "$MACHINE_TYPE does not exist on your filesystem."
 #else
 #    echo "Device Exists"
-    if [ ! -f /dev/sda ]; then
-        echo "SDA"
-        elif [ ! -f /dev/sdb ]; then
-            echo "SDB"
-            elif [ ! -f /dev/sdc ]; then
-                echo "SDC"
-fi
-}
+#    if [ ! -f /dev/sda ]; then
+#        echo "SDA"
+#        elif [ ! -f /dev/sdb ]; then
+#            echo "SDB"
+#            elif [ ! -f /dev/sdc ]; then
+#                echo "SDC"
+#fi
+#}
 
 yab() {
 #if [ -f "$FILE" ]; then
